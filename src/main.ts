@@ -8,6 +8,10 @@ import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import Sidebar from 'primevue/sidebar'
+import Dropdown from 'primevue/dropdown'
 
 import App from './App.vue'
 import router from './router'
@@ -20,5 +24,9 @@ app.use(PrimeVue)
 
 app.component('PButton', Button)
 app.component('PInputText', InputText)
+app.component('PDataTable', DataTable)
+app.component('PColumn', Column)
+app.component('PSidebar', Sidebar)
+app.component('PDropdown', Dropdown)
 
 app.mount('#app')

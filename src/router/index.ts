@@ -8,6 +8,16 @@ const router = createRouter({
       path: '/login',
       name: 'home',
       component: LoginViewVue
+    },
+    {
+      path: '/users',
+      name: 'users',
+      component: () => import('@/views/UsersView.vue')
+    },
+    {
+      path: '/users/create',
+      name: 'create-user',
+      component: () => import('@/views/RegisterView.vue')
     }
   ]
 })
