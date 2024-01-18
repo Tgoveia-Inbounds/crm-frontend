@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginViewVue from '../views/LoginView.vue'
 import DashboardViewVue from '@/views/DashboardView.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,6 +42,15 @@ const router = createRouter({
       component: () => import('@/views/LeadsView.vue')
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const auth = useAuthStore()
+  if (to.name !== 'login' && auth.isSessionVerified && !auth.isAuthenticated) {
+    next({ name: 'login' })
+  } else {
+    next()
+  }
 })
 
 export default router

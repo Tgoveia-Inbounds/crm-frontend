@@ -31,18 +31,24 @@
         <span class="icon"> <i class="pi pi-chart-line"></i> </span>
         <span v-if="isCollapsed">Reports</span>
       </p-button>
+      <p-button :class="{ ...buttonClass('logout'), 'bottom-btn': true }" @click="handleLogout">
+        <span class="icon"> <i class="pi pi-sign-out"></i> </span>
+        <span v-if="isCollapsed">Logout</span>
+      </p-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
 const isCollapsed = ref(true)
 const sidebarClass = computed(() => (!isCollapsed.value ? 'closed' : 'open'))
 const activeButton = ref('Dashboard')
 const router = useRouter()
+const auth = useAuthStore()
 
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value
@@ -54,6 +60,11 @@ const setActiveButton = (buttonName: string) => {
   router.push({
     name: buttonName.toLowerCase()
   })
+}
+
+const handleLogout = async () => {
+  await auth.logout()
+  router.push({ name: 'login' })
 }
 
 const buttonClass = (buttonName: string) => ({
@@ -74,13 +85,15 @@ const logoSrc = computed(() => {
   transition: width 0.4s;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   height: 100vh;
-  position: flex;
+  display: flex;
   flex-direction: column;
 }
 
 .sidebar-column {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  flex-grow: 1;
 }
 
 .sidebar-btn {
@@ -93,6 +106,7 @@ const logoSrc = computed(() => {
 
 .sidebar-logo img {
   margin-left: 30px;
+  flex-grow: 0;
   width: 80%;
   transition:
     height 0.25s ease-in-out,
@@ -103,6 +117,7 @@ const logoSrc = computed(() => {
   display: flex;
   justify-content: flex-end;
   margin: 25px 28px;
+  flex-grow: 0;
 }
 
 .sidebar-toggle-btn {
@@ -134,5 +149,10 @@ const logoSrc = computed(() => {
   transition:
     height 0.25s ease-in-out,
     opacity 0.5s ease-in-out;
+}
+
+.bottom-btn {
+  margin-top: auto;
+  margin-bottom: 25px;
 }
 </style>

@@ -19,6 +19,7 @@
           v-model="role"
           :options="roleOptions"
           optionLabel="label"
+          optionValue="value"
           id="role-input"
           class="input"
           placeholder="Role"
@@ -41,20 +42,30 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useUserStore } from '@/stores/user'
+import { Role } from 'backend-sdk'
+
+const userStore = useUserStore()
 
 const roleOptions = [
-  { label: 'Agent', value: 'agent' },
-  { label: 'Manager', value: 'manager' }
+  { label: 'Agent', value: Role.Agent },
+  { label: 'Manager', value: Role.Manager }
 ]
 
 const firstName = ref('')
 const lastName = ref('')
 const email = ref('')
 const password = ref('')
-const role = ref('')
+const role = ref<Role>(Role.Agent)
 
-const handleRegister = () => {
-  console.log('Registering...')
+const handleRegister = async () => {
+  await userStore.create({
+    firstName: firstName.value,
+    lastName: lastName.value,
+    email: email.value,
+    password: password.value,
+    role: role.value
+  })
 }
 </script>
 
