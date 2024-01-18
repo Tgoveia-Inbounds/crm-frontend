@@ -24,7 +24,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .login-view {
   display: flex;
   flex-direction: row;
