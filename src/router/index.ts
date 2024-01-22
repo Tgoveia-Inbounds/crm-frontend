@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginViewVue from '../views/LoginView.vue'
 import DashboardViewVue from '@/views/DashboardView.vue'
 import { useAuthStore } from '@/stores/auth'
+import { useLoadStore } from '@/stores/load'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,11 +47,18 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore()
+  const loadStore = useLoadStore()
+  loadStore.setLoading(true)
   if (to.name !== 'login' && auth.isSessionVerified && !auth.isAuthenticated) {
     next({ name: 'login' })
   } else {
     next()
   }
+})
+
+router.afterEach(() => {
+  const loadStore = useLoadStore()
+  loadStore.setLoading(false)
 })
 
 export default router
