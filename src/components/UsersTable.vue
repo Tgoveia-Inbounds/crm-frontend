@@ -55,7 +55,6 @@ const handleUpdate = (user: User) => {
 }
 
 const handleDelete = async (user: User) => {
-  console.log('delete user', user)
   await userStore.remove(user)
 }
 
