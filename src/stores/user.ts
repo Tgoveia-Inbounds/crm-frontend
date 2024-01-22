@@ -19,10 +19,8 @@ export const useUserStore = defineStore('user', () => {
   const create: (user: CreateUserDto) => Promise<User | ExceptionDto> = async (user) => {
     try {
       const { data } = await model.createUser(user)
-      console.log(data)
       return data
     } catch (e: any) {
-      console.log(e)
       if (e.response?.data) {
         return e.response.data
       } else {

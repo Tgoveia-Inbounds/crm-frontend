@@ -38,10 +38,8 @@ export const useAuthStore = defineStore('auth', () => {
       await auth.verifySession()
       isAuthenticated.value = true
       isSessionVerified.value = true
-      console.log('Session verified')
       return true
     } catch {
-      console.log('Session not verified')
       return false
     }
   }
