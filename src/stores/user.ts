@@ -16,6 +16,21 @@ export const useUserStore = defineStore('user', () => {
     return data
   }
 
+  const findOne: (id: string) => Promise<User | ExceptionDto> = async (id) => {
+    try {
+      const { data } = await model.findOneUsers(id)
+      return data
+    } catch (e: any) {
+      if (e.response?.data) {
+        return e.response.data
+      } else {
+        return {
+          message: 'Something went wrong, please try again later.'
+        }
+      }
+    }
+  }
+
   const create: (user: CreateUserDto) => Promise<User | ExceptionDto> = async (user) => {
     try {
       const { data } = await model.createUser(user)
@@ -43,5 +58,5 @@ export const useUserStore = defineStore('user', () => {
     await model.removeUser(user.id)
   }
 
-  return { findAll, create, update, remove }
+  return { findAll, findOne, create, update, remove }
 })

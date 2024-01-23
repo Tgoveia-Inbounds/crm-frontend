@@ -1,16 +1,16 @@
 <template>
-  <div class="register-view">
-    <h1>Create user</h1>
-    <RegisterForm />
+  <div class="update-user-view">
+    <h1>Update User</h1>
+    <UpdateForm />
   </div>
 </template>
 
 <script setup lang="ts">
-import RegisterForm from '@/components/RegisterForm.vue'
+import UpdateForm from '@/components/UpdateForm.vue'
 </script>
 
 <style lang="scss">
-.register-view {
+.update-user-view {
   display: flex;
   flex-direction: column;
   min-width: 500px;
@@ -19,7 +19,7 @@ import RegisterForm from '@/components/RegisterForm.vue'
   justify-content: flex-start;
 }
 
-.register-view h1 {
+.update-user-view h1 {
   color: #333;
   margin-bottom: 1rem;
   font-size: 2.5rem;

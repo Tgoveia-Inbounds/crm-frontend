@@ -11,11 +11,13 @@
           <p-button
             class="button is-info is-circle"
             icon="pi pi-pencil"
+            title="Edit User"
             @click="handleUpdate(slotProps.data)"
           />
           <p-button
             class="button is-danger is-circle"
             icon="pi pi-trash"
+            title="Delete User"
             @click="handleDelete(slotProps.data)"
           />
         </span>
@@ -29,9 +31,11 @@ import { onMounted, ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 import type { User } from 'backend-sdk'
+import useCapitalizeFirstLetter from '@/helpers/capitalizeFirstLetter.helper'
+
 const userStore = useUserStore()
 const router = useRouter()
-
+const { capitalizeFirstLetter } = useCapitalizeFirstLetter()
 const users = ref(
   [] as {
     id: string
@@ -51,7 +55,7 @@ const formatDateTime = (date: string) => {
 }
 
 const handleUpdate = (user: User) => {
-  router.push({ name: 'users-update', params: { id: user.id } })
+  router.push({ name: 'update-user', params: { id: user.id } })
 }
 
 const handleDelete = async (user: User) => {
@@ -65,7 +69,7 @@ onMounted(async () => {
     firstName: user.firstName,
     lastName: user.lastName,
     email: user.email,
-    role: user.role,
+    role: capitalizeFirstLetter(user.role),
     createdAt: formatDateTime(user.createdAt)
   }))
 })
@@ -75,10 +79,10 @@ onMounted(async () => {
 .p-datatable {
   overflow-x: auto;
   border-collapse: collapse;
-  background-color: #f4f4f4;
   color: #333;
   font-family: Arial, sans-serif;
   font-size: 0.9em;
+  min-width: 60vw;
 }
 
 .p-datatable .p-datatable-thead > tr > th {
@@ -96,18 +100,27 @@ onMounted(async () => {
   overflow: hidden;
   text-overflow: ellipsis;
   border-bottom: 1px solid #ddd;
+  vertical-align: middle;
 }
 
 .p-datatable .p-datatable-tbody > tr:hover {
   background-color: #e9ecef;
 }
 
-.p-datatable {
-  overflow-x: auto;
+.p-datatable .p-datatable-thead > tr > th:first-child {
+  border-top-left-radius: 5px;
+}
+
+.p-datatable .p-datatable-thead > tr > th:last-child {
+  border-top-right-radius: 5px;
 }
 
 .is-circle {
   border-radius: 50% !important;
   margin-right: 5px;
+  max-width: 35px;
+  max-height: 35px;
+  padding: 0;
+  aspect-ratio: 1/1;
 }
 </style>

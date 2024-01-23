@@ -28,6 +28,11 @@ const router = createRouter({
       component: () => import('@/views/RegisterView.vue')
     },
     {
+      path: '/users/update/:id',
+      name: 'update-user',
+      component: () => import('@/views/UpdateUsersView.vue')
+    },
+    {
       path: '/campaigns',
       name: 'campaigns',
       component: () => import('@/views/CampaignsView.vue')

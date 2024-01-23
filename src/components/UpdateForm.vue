@@ -1,7 +1,7 @@
 <template>
-  <div class="register-form">
+  <div class="update-form">
     <p-toast position="bottom-center" />
-    <form @submit.prevent="handleRegister">
+    <form @submit.prevent="handleUpdate">
       <label class="label" for="fname-input">
         First Name
         <p-input-text
@@ -37,12 +37,9 @@
           id="email-input"
           class="input"
           placeholder="Email"
+          disabled
           :class="{ 'is-danger': v$.email.$error }"
         />
-        <span v-if="v$.email.$error" class="help is-danger has-text-weight-light">
-          <p v-if="v$.email.required.$invalid">Email is required</p>
-          <p v-if="v$.email.email.$invalid">Email must be valid</p>
-        </span>
       </label>
 
       <label class="label" for="role-input">
@@ -106,13 +103,13 @@
         </span>
       </label>
 
-      <p-button type="submit" class="button is-info" label="Register" />
+      <p-button type="submit" class="button is-info" label="Update" />
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, email as emailValidator } from '@vuelidate/validators'
 import { useUserStore } from '@/stores/user'
@@ -120,11 +117,14 @@ import { Role } from 'backend-sdk'
 import { userPasswordValidators } from '@/helpers/password.helper'
 import { isErrorResponse } from '@/helpers/errors.helper'
 import { useToast } from 'primevue/usetoast'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const userStore = useUserStore()
 const toast = useToast()
 const router = useRouter()
+const route = useRoute()
+
+const userId = route.params.id as string
 
 const firstName = ref('')
 const lastName = ref('')
@@ -137,11 +137,29 @@ const roleOptions = [
   { label: 'Manager', value: Role.Manager }
 ]
 
+onMounted(async () => {
+  const userResponse = await userStore.findOne(userId)
+  if (userResponse && 'id' in userResponse) {
+    firstName.value = userResponse.firstName
+    lastName.value = userResponse.lastName
+    email.value = userResponse.email
+    role.value = userResponse.role
+    password.value = ''
+  } else if ('message' in userResponse) {
+    toast.add({
+      severity: 'error',
+      summary: 'Error fetching user',
+      detail: userResponse.message,
+      life: 3000
+    })
+  }
+})
+
 const rules = computed(() => ({
   firstName: { required },
   lastName: { required },
   email: { required, email: emailValidator },
-  password: { required, ...userPasswordValidators() },
+  password: password.value ? { required, ...userPasswordValidators() } : {},
   role: { required }
 }))
 
@@ -156,28 +174,36 @@ const showErrorMessage = (message: string, severity: 'success' | 'error', summar
   })
 }
 
-const handleRegister = async () => {
+const handleUpdate = async () => {
   const isValid = await v$.value.$validate()
   if (!isValid) return
-  const response = await userStore.create({
+
+  const userToUpdate = await userStore.findOne(userId)
+  if (!userToUpdate || 'message' in userToUpdate) {
+    showErrorMessage('Failed to fetch user for update', 'error')
+    return
+  }
+
+  const updatePayload = {
     firstName: firstName.value,
     lastName: lastName.value,
-    email: email.value,
-    password: password.value,
-    role: role.value
-  })
+    role: role.value,
+    password: password.value
+  }
+
+  const response = await userStore.update(userToUpdate, updatePayload)
 
   if (isErrorResponse(response)) {
-    showErrorMessage(response.message, 'error', 'Registration Failed')
+    showErrorMessage(response.message, 'error', 'Update Failed')
   } else {
-    showErrorMessage('Registration successful', 'success')
+    showErrorMessage('User updated successfully', 'success')
     router.push({ name: 'users' })
   }
 }
 </script>
 
 <style scoped>
-.register-form form {
+.update-form form {
   display: flex;
   flex-direction: column;
   gap: 1rem;

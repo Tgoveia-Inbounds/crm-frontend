@@ -1,3 +1,17 @@
+<template>
+  <div class="progress-spinner" v-if="isLoading">
+    <p-progress-spinner aria-label="Loading" />
+  </div>
+  <div id="layout-container">
+    <sidebar-component v-if="isLoginView" />
+    <div class="router-view-container">
+      <div class="router-view-card">
+        <router-view />
+      </div>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 import SidebarComponent from './components/SidebarComponent.vue'
 import { computed } from 'vue'
@@ -25,18 +39,6 @@ onMounted(async () => {
   }
 })
 </script>
-
-<template>
-  <div class="progress-spinner" v-if="isLoading">
-    <p-progress-spinner aria-label="Loading" />
-  </div>
-  <div id="layout-container">
-    <sidebar-component v-if="isLoginView" />
-    <div>
-      <router-view />
-    </div>
-  </div>
-</template>
 
 <style>
 #layout-container {
@@ -67,5 +69,22 @@ onMounted(async () => {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.53);
+}
+
+.router-view-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 4em;
+  background-color: aliceblue;
+}
+
+.router-view-card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  overflow: hidden;
 }
 </style>

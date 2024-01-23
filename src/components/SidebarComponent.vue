@@ -4,34 +4,56 @@
       <p-button
         class="button sidebar-toggle-btn is-info"
         icon="pi pi-bars"
+        title="Toggle Sidebar"
         @click="toggleSidebar"
       />
     </div>
     <div class="sidebar-logo">
-      <img :src="`${logoSrc}`" alt="Inbounds logo" />
+      <img title="Inbounds.com" :src="`${logoSrc}`" alt="Inbounds logo" />
     </div>
     <div class="sidebar-column">
-      <p-button :class="buttonClass('dashboard')" @click="setActiveButton('dashboard')">
+      <p-button
+        :class="buttonClass('dashboard')"
+        @click="setActiveButton('dashboard')"
+        title="View Dashboard"
+      >
         <span class="icon"> <i class="pi pi-home"></i> </span>
         <span v-if="isCollapsed">Dashboard</span>
       </p-button>
-      <p-button :class="buttonClass('users')" @click="setActiveButton('users')">
+
+      <p-button :class="buttonClass('users')" @click="setActiveButton('users')" title="View Users">
         <span class="icon"> <i class="pi pi-user"></i> </span>
         <span v-if="isCollapsed">Users</span>
       </p-button>
-      <p-button :class="buttonClass('leads')" @click="setActiveButton('leads')">
+
+      <p-button :class="buttonClass('leads')" @click="setActiveButton('leads')" title="View Leads">
         <span class="icon"> <i class="pi pi-users"></i> </span>
         <span v-if="isCollapsed">Leads</span>
       </p-button>
-      <p-button :class="buttonClass('campaigns')" @click="setActiveButton('campaigns')">
+
+      <p-button
+        :class="buttonClass('campaigns')"
+        @click="setActiveButton('campaigns')"
+        title="View Campaigns"
+      >
         <span class="icon"> <i class="pi pi-sitemap"></i> </span>
         <span v-if="isCollapsed">Campaigns</span>
       </p-button>
-      <p-button :class="buttonClass('reports')" @click="setActiveButton('reports')">
+
+      <p-button
+        :class="buttonClass('reports')"
+        @click="setActiveButton('reports')"
+        title="View Reports"
+      >
         <span class="icon"> <i class="pi pi-chart-line"></i> </span>
         <span v-if="isCollapsed">Reports</span>
       </p-button>
-      <p-button :class="{ ...buttonClass('logout'), 'bottom-btn': true }" @click="handleLogout">
+
+      <p-button
+        :class="{ ...buttonClass('logout'), 'bottom-btn': true }"
+        @click="handleLogout"
+        title="Logout"
+      >
         <span class="icon"> <i class="pi pi-sign-out"></i> </span>
         <span v-if="isCollapsed">Logout</span>
       </p-button>
