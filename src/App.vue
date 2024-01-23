@@ -1,4 +1,5 @@
 <template>
+  <p-toast position="bottom-center" />
   <div class="progress-spinner" v-if="isLoading">
     <p-progress-spinner aria-label="Loading" />
   </div>

@@ -1,6 +1,5 @@
 <template>
   <div class="login-form">
-    <p-toast position="bottom-center" />
     <form @submit.prevent="handleLogin">
       <label class="label" for="email-input">
         Email

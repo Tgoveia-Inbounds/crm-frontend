@@ -34,8 +34,12 @@ import { useRouter } from 'vue-router'
 import type { User } from 'backend-sdk'
 import useCapitalizeFirstLetter from '@/helpers/capitalizeFirstLetter.helper'
 import { useConfirm } from 'primevue/useconfirm'
+import { useLoadStore } from '@/stores/load'
+import { useToast } from 'primevue/usetoast'
 
 const userStore = useUserStore()
+const loadStore = useLoadStore()
+const toast = useToast()
 const router = useRouter()
 const confirm = useConfirm()
 const { capitalizeFirstLetter } = useCapitalizeFirstLetter()
@@ -70,12 +74,21 @@ const handleDelete = async (event: Event, user: User) => {
     icon: 'pi pi-info-circle',
     acceptClass: 'p-button-danger p-button-sm',
     accept: async () => {
+      loadStore.setLoading(true)
       await userStore.remove(user)
+      users.value = users.value.filter((u) => u.id !== user.id)
+      loadStore.setLoading(false)
+      toast.add({
+        severity: 'success',
+        detail: 'User removed successfully',
+        life: 3000
+      })
     }
   })
 }
 
 onMounted(async () => {
+  loadStore.setLoading(true)
   const loadedUsers = (await userStore.findAll()) || []
   users.value = loadedUsers.map((user) => ({
     id: user.id,
@@ -85,6 +98,7 @@ onMounted(async () => {
     role: capitalizeFirstLetter(user.role),
     createdAt: formatDateTime(user.createdAt)
   }))
+  loadStore.setLoading(false)
 })
 </script>
 

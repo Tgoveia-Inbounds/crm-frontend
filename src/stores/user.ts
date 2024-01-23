@@ -12,8 +12,12 @@ const model = UsersApiFactory(undefined, import.meta.env.VITE_BE_BASE_URL, Axios
 
 export const useUserStore = defineStore('user', () => {
   const findAll: () => Promise<User[]> = async () => {
-    const { data } = await model.findAllUsers()
-    return data
+    try {
+      const { data } = await model.findAllUsers()
+      return data
+    } catch (e: any) {
+      return []
+    }
   }
 
   const findOne: (id: string) => Promise<User | ExceptionDto> = async (id) => {

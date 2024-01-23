@@ -1,6 +1,5 @@
 <template>
   <div class="register-form">
-    <p-toast position="bottom-center" />
     <form @submit.prevent="handleSubmit">
       <label class="label" for="fname-input">
         First Name

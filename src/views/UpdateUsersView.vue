@@ -51,7 +51,7 @@ const handleUpdate = async (user: UpdateUserDto) => {
     role: user.role
   })
 
-  const showErrorMessage = (message: string, severity: 'success' | 'error', summary?: string) => {
+  const showMessage = (message: string, severity: 'success' | 'error', summary?: string) => {
     toast.add({
       severity: severity,
       summary: summary,
@@ -61,9 +61,9 @@ const handleUpdate = async (user: UpdateUserDto) => {
   }
 
   if (isErrorResponse(response)) {
-    showErrorMessage(response.message, 'error', 'Registration Failed')
+    showMessage(response.message, 'error', 'Registration Failed')
   } else {
-    showErrorMessage('Registration successful', 'success')
+    showMessage('Registration successful', 'success')
     router.push({ name: 'users' })
   }
 }
