@@ -46,11 +46,11 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  const update: (user: User, updateUserDto: UpdateUserDto) => Promise<User | ExceptionDto> = async (
-    user,
+  const update: (id: string, updateUserDto: UpdateUserDto) => Promise<User | ExceptionDto> = async (
+    id,
     updateUserDto
   ) => {
-    const { data } = await model.updateUser(user.id, updateUserDto)
+    const { data } = await model.updateUser(id, updateUserDto)
     return data
   }
 

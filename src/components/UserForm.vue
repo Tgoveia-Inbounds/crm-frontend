@@ -1,7 +1,7 @@
 <template>
-  <div class="update-form">
+  <div class="register-form">
     <p-toast position="bottom-center" />
-    <form @submit.prevent="handleUpdate">
+    <form @submit.prevent="handleSubmit">
       <label class="label" for="fname-input">
         First Name
         <p-input-text
@@ -37,9 +37,13 @@
           id="email-input"
           class="input"
           placeholder="Email"
-          disabled
+          :disabled="props.mode === 'update'"
           :class="{ 'is-danger': v$.email.$error }"
         />
+        <span v-if="v$.email.$error" class="help is-danger has-text-weight-light">
+          <p v-if="v$.email.required.$invalid">Email is required</p>
+          <p v-if="v$.email.email.$invalid">Email must be valid</p>
+        </span>
       </label>
 
       <label class="label" for="role-input">
@@ -103,107 +107,63 @@
         </span>
       </label>
 
-      <p-button type="submit" class="button is-info" label="Update" />
+      <p-button type="submit" class="button is-info" label="Register" />
     </form>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
-import { required, email as emailValidator } from '@vuelidate/validators'
-import { useUserStore } from '@/stores/user'
+import { required as requiredValidator, email as emailValidator } from '@vuelidate/validators'
 import { Role } from 'backend-sdk'
 import { userPasswordValidators } from '@/helpers/password.helper'
-import { isErrorResponse } from '@/helpers/errors.helper'
-import { useToast } from 'primevue/usetoast'
-import { useRouter, useRoute } from 'vue-router'
+import { type User } from 'backend-sdk'
+import type { PropType } from 'vue'
 
-const userStore = useUserStore()
-const toast = useToast()
-const router = useRouter()
-const route = useRoute()
+const props = defineProps({
+  user: Object as PropType<User>,
+  mode: { type: String, default: 'create' }
+})
 
-const userId = route.params.id as string
+const emit = defineEmits(['submit'])
 
-const firstName = ref('')
-const lastName = ref('')
-const email = ref('')
-const password = ref('')
-const role = ref<Role>(Role.Agent)
+const firstName = ref(props.user?.firstName)
+const lastName = ref(props.user?.lastName)
+const email = ref(props.user?.email)
+const password = ref()
+const role = ref<Role>(props.user?.role || Role.Agent)
 
 const roleOptions = [
   { label: 'Agent', value: Role.Agent },
   { label: 'Manager', value: Role.Manager }
 ]
-
-onMounted(async () => {
-  const userResponse = await userStore.findOne(userId)
-  if (userResponse && 'id' in userResponse) {
-    firstName.value = userResponse.firstName
-    lastName.value = userResponse.lastName
-    email.value = userResponse.email
-    role.value = userResponse.role
-    password.value = ''
-  } else if ('message' in userResponse) {
-    toast.add({
-      severity: 'error',
-      summary: 'Error fetching user',
-      detail: userResponse.message,
-      life: 3000
-    })
-  }
-})
-
+const required = props.mode === 'create' && requiredValidator
 const rules = computed(() => ({
   firstName: { required },
   lastName: { required },
   email: { required, email: emailValidator },
-  password: password.value ? { required, ...userPasswordValidators() } : {},
+  password: { required, ...userPasswordValidators() },
   role: { required }
 }))
 
 const v$ = useVuelidate(rules, { firstName, lastName, email, password, role })
 
-const showErrorMessage = (message: string, severity: 'success' | 'error', summary?: string) => {
-  toast.add({
-    severity: severity,
-    summary: summary,
-    detail: message,
-    life: 3000
-  })
-}
-
-const handleUpdate = async () => {
+const handleSubmit = async () => {
   const isValid = await v$.value.$validate()
   if (!isValid) return
-
-  const userToUpdate = await userStore.findOne(userId)
-  if (!userToUpdate || 'message' in userToUpdate) {
-    showErrorMessage('Failed to fetch user for update', 'error')
-    return
-  }
-
-  const updatePayload = {
+  emit('submit', {
     firstName: firstName.value,
     lastName: lastName.value,
-    role: role.value,
-    password: password.value
-  }
-
-  const response = await userStore.update(userToUpdate, updatePayload)
-
-  if (isErrorResponse(response)) {
-    showErrorMessage(response.message, 'error', 'Update Failed')
-  } else {
-    showErrorMessage('User updated successfully', 'success')
-    router.push({ name: 'users' })
-  }
+    email: email.value,
+    password: password.value,
+    role: role.value
+  })
 }
 </script>
 
 <style scoped>
-.update-form form {
+.register-form form {
   display: flex;
   flex-direction: column;
   gap: 1rem;

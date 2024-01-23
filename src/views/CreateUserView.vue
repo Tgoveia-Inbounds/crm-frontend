@@ -1,12 +1,47 @@
 <template>
   <div class="register-view">
     <h1>Create user</h1>
-    <RegisterForm />
+    <UserForm @submit="handleRegister" />
   </div>
 </template>
 
 <script setup lang="ts">
-import RegisterForm from '@/components/RegisterForm.vue'
+import UserForm from '@/components/UserForm.vue'
+import { isErrorResponse } from '@/helpers/errors.helper'
+import { useUserStore } from '@/stores/user'
+import type { CreateUserDto } from 'backend-sdk'
+import { useToast } from 'primevue/usetoast'
+import { useRouter } from 'vue-router'
+
+const userStore = useUserStore()
+const toast = useToast()
+const router = useRouter()
+
+const handleRegister = async (user: CreateUserDto) => {
+  const response = await userStore.create({
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    password: user.password,
+    role: user.role
+  })
+
+  const showErrorMessage = (message: string, severity: 'success' | 'error', summary?: string) => {
+    toast.add({
+      severity: severity,
+      summary: summary,
+      detail: message,
+      life: 3000
+    })
+  }
+
+  if (isErrorResponse(response)) {
+    showErrorMessage(response.message, 'error', 'Registration Failed')
+  } else {
+    showErrorMessage('Registration successful', 'success')
+    router.push({ name: 'users' })
+  }
+}
 </script>
 
 <style lang="scss">
