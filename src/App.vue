@@ -3,12 +3,13 @@
     <p-progress-spinner aria-label="Loading" />
   </div>
   <div id="layout-container">
-    <sidebar-component v-if="isLoginView" />
-    <div class="router-view-container">
+    <sidebar-component v-if="!isLoginView" />
+    <div class="router-view-container" v-if="!isLoginView">
       <div class="router-view-card">
         <router-view />
       </div>
     </div>
+    <router-view v-else />
   </div>
 </template>
 
@@ -23,7 +24,7 @@ import { storeToRefs } from 'pinia'
 
 const router = useRouter()
 const route = useRoute()
-const isLoginView = computed(() => route.name !== 'login')
+const isLoginView = computed(() => route.name === 'login')
 
 const auth = useAuthStore()
 const load = useLoadStore()
