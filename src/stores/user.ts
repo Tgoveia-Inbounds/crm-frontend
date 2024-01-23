@@ -18,7 +18,7 @@ export const useUserStore = defineStore('user', () => {
 
   const findOne: (id: string) => Promise<User | ExceptionDto> = async (id) => {
     try {
-      const { data } = await model.findOneUsers(id)
+      const { data } = await model.findOneUser(id)
       return data
     } catch (e: any) {
       if (e.response?.data) {

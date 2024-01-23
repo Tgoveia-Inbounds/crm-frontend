@@ -25,7 +25,7 @@ const router = createRouter({
     {
       path: '/users/create',
       name: 'create-user',
-      component: () => import('@/views/RegisterView.vue')
+      component: () => import('@/views/CreateUserView.vue')
     },
     {
       path: '/users/update/:id',

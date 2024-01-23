@@ -2,7 +2,7 @@
   <p-confirm-popup />
   <p-data-table :value="users" :paginator="true" :rows="10" :paginatorTemplate="paginatorTemplate">
     <p-column field="firstName" header="First Name"></p-column>
-    <p-column field="lastName" header="Campaign"></p-column>
+    <p-column field="lastName" header="Last Name"></p-column>
     <p-column field="email" header="Email"></p-column>
     <p-column field="role" header="Role"></p-column>
     <p-column field="createdAt" header="Created At"></p-column>
