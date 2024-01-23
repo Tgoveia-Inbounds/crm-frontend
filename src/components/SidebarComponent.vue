@@ -1,5 +1,6 @@
 <template>
   <div :class="`sidebar ${sidebarClass}`">
+    <p-confirm-popup />
     <div class="top-row">
       <p-button
         class="button sidebar-toggle-btn is-info"
@@ -18,17 +19,17 @@
         title="View Dashboard"
       >
         <span class="icon"> <i class="pi pi-home"></i> </span>
-        <span v-if="isCollapsed">Dashboard</span>
+        <span v-if="!isCollapsed">Dashboard</span>
       </p-button>
 
       <p-button :class="buttonClass('users')" @click="setActiveButton('users')" title="View Users">
         <span class="icon"> <i class="pi pi-user"></i> </span>
-        <span v-if="isCollapsed">Users</span>
+        <span v-if="!isCollapsed">Users</span>
       </p-button>
 
       <p-button :class="buttonClass('leads')" @click="setActiveButton('leads')" title="View Leads">
         <span class="icon"> <i class="pi pi-users"></i> </span>
-        <span v-if="isCollapsed">Leads</span>
+        <span v-if="!isCollapsed">Leads</span>
       </p-button>
 
       <p-button
@@ -37,7 +38,7 @@
         title="View Campaigns"
       >
         <span class="icon"> <i class="pi pi-sitemap"></i> </span>
-        <span v-if="isCollapsed">Campaigns</span>
+        <span v-if="!isCollapsed">Campaigns</span>
       </p-button>
 
       <p-button
@@ -46,7 +47,7 @@
         title="View Reports"
       >
         <span class="icon"> <i class="pi pi-chart-line"></i> </span>
-        <span v-if="isCollapsed">Reports</span>
+        <span v-if="!isCollapsed">Reports</span>
       </p-button>
 
       <p-button
@@ -55,7 +56,7 @@
         title="Logout"
       >
         <span class="icon"> <i class="pi pi-sign-out"></i> </span>
-        <span v-if="isCollapsed">Logout</span>
+        <span v-if="!isCollapsed">Logout</span>
       </p-button>
     </div>
   </div>
@@ -65,12 +66,14 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useConfirm } from 'primevue/useconfirm'
 
-const isCollapsed = ref(true)
-const sidebarClass = computed(() => (!isCollapsed.value ? 'closed' : 'open'))
+const isCollapsed = ref(false)
+const sidebarClass = computed(() => (isCollapsed.value ? 'closed' : 'open'))
 const activeButton = ref('Dashboard')
 const router = useRouter()
 const auth = useAuthStore()
+const confirm = useConfirm()
 
 const toggleSidebar = () => {
   isCollapsed.value = !isCollapsed.value
@@ -84,9 +87,17 @@ const setActiveButton = (buttonName: string) => {
   })
 }
 
-const handleLogout = async () => {
-  await auth.logout()
-  router.push({ name: 'login' })
+const handleLogout = async (event: Event) => {
+  if (!(event?.currentTarget instanceof HTMLElement)) return
+  confirm.require({
+    target: event.currentTarget,
+    message: 'Are you sure you want to logout?',
+    icon: 'pi pi-exclamation-triangle',
+    accept: async () => {
+      await auth.logout()
+      router.push({ name: 'login' })
+    }
+  })
 }
 
 const buttonClass = (buttonName: string) => ({
@@ -97,7 +108,7 @@ const buttonClass = (buttonName: string) => ({
 })
 
 const logoSrc = computed(() => {
-  return isCollapsed.value ? 'src/assets/Inbounds-all-blue.png' : 'src/assets/Inbounds-blue-o.png'
+  return !isCollapsed.value ? 'src/assets/Inbounds-all-blue.png' : 'src/assets/Inbounds-blue-o.png'
 })
 </script>
 

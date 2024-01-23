@@ -1,4 +1,5 @@
 <template>
+  <p-confirm-popup />
   <p-data-table :value="users" :paginator="true" :rows="10" :paginatorTemplate="paginatorTemplate">
     <p-column field="firstName" header="First Name"></p-column>
     <p-column field="lastName" header="Campaign"></p-column>
@@ -18,7 +19,7 @@
             class="button is-danger is-circle"
             icon="pi pi-trash"
             title="Delete User"
-            @click="handleDelete(slotProps.data)"
+            @click="(e: Event) => handleDelete(e, slotProps.data)"
           />
         </span>
       </template>
@@ -32,9 +33,11 @@ import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 import type { User } from 'backend-sdk'
 import useCapitalizeFirstLetter from '@/helpers/capitalizeFirstLetter.helper'
+import { useConfirm } from 'primevue/useconfirm'
 
 const userStore = useUserStore()
 const router = useRouter()
+const confirm = useConfirm()
 const { capitalizeFirstLetter } = useCapitalizeFirstLetter()
 const users = ref(
   [] as {
@@ -58,8 +61,18 @@ const handleUpdate = (user: User) => {
   router.push({ name: 'update-user', params: { id: user.id } })
 }
 
-const handleDelete = async (user: User) => {
-  await userStore.remove(user)
+const handleDelete = async (event: Event, user: User) => {
+  if (!user || !event) return
+  if (!(event.currentTarget instanceof HTMLElement)) return
+  confirm.require({
+    target: event.currentTarget,
+    message: 'Are you sure you want to remove the user? This action is irreversible.',
+    icon: 'pi pi-info-circle',
+    acceptClass: 'p-button-danger p-button-sm',
+    accept: async () => {
+      await userStore.remove(user)
+    }
+  })
 }
 
 onMounted(async () => {

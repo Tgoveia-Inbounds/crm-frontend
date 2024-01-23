@@ -15,6 +15,8 @@ import Dropdown from 'primevue/dropdown'
 import ToastService from 'primevue/toastservice'
 import Toast from 'primevue/toast'
 import ProgressSpinner from 'primevue/progressspinner'
+import ConfirmationService from 'primevue/confirmationservice'
+import ConfirmPopup from 'primevue/confirmpopup'
 
 import App from './App.vue'
 import router from './router'
@@ -26,6 +28,7 @@ app.use(createPinia())
 app.use(router)
 app.use(PrimeVue)
 app.use(ToastService)
+app.use(ConfirmationService)
 
 // Global components
 app.component('PButton', Button)
@@ -36,6 +39,7 @@ app.component('PSidebar', Sidebar)
 app.component('PDropdown', Dropdown)
 app.component('PToast', Toast)
 app.component('PProgressSpinner', ProgressSpinner)
+app.component('PConfirmPopup', ConfirmPopup)
 
 // Mount app
 app.mount('#app')
