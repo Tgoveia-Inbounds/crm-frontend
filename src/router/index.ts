@@ -38,6 +38,16 @@ const router = createRouter({
       component: () => import('@/views/CampaignsView.vue')
     },
     {
+      path: '/campaigns/create',
+      name: 'create-campaign',
+      component: () => import('@/views/CreateCampaignView.vue')
+    },
+    {
+      path: '/campaigns/update/:id',
+      name: 'update-campaign',
+      component: () => import('@/views/UpdateCampaignView.vue')
+    },
+    {
       path: '/reports',
       name: 'reports',
       component: () => import('@/views/ReportsView.vue')

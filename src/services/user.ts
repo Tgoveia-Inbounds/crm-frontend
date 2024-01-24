@@ -6,11 +6,10 @@ import {
   type UpdateUserDto,
   type ExceptionDto
 } from 'backend-sdk'
-import { defineStore } from 'pinia'
 
 const model = UsersApiFactory(undefined, import.meta.env.VITE_BE_BASE_URL, AxiosInstance)
 
-export const useUserStore = defineStore('user', () => {
+export const useUserService = () => {
   const findAll: () => Promise<User[]> = async () => {
     try {
       const { data } = await model.findAllUsers()
@@ -63,4 +62,4 @@ export const useUserStore = defineStore('user', () => {
   }
 
   return { findAll, findOne, create, update, remove }
-})
+}

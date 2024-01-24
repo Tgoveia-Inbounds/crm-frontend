@@ -8,12 +8,12 @@
 <script setup lang="ts">
 import UserForm from '@/components/UserForm.vue'
 import { isErrorResponse } from '@/helpers/errors.helper'
-import { useUserStore } from '@/stores/user'
+import { useUserService } from '@/services/user'
 import type { CreateUserDto } from 'backend-sdk'
 import { useToast } from 'primevue/usetoast'
 import { useRouter } from 'vue-router'
 
-const userStore = useUserStore()
+const userStore = useUserService()
 const toast = useToast()
 const router = useRouter()
 

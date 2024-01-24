@@ -10,13 +10,13 @@ import UserForm from '@/components/UserForm.vue'
 import { isErrorResponse } from '@/helpers/errors.helper'
 import { isUserResponse } from '@/helpers/type.helper'
 import { useLoadStore } from '@/stores/load'
-import { useUserStore } from '@/stores/user'
+import { useUserService } from '@/services/user'
 import type { UpdateUserDto, User } from 'backend-sdk'
 import { useToast } from 'primevue/usetoast'
 import { onMounted, ref, type Ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-const userStore = useUserStore()
+const userStore = useUserService()
 const loadStore = useLoadStore()
 const toast = useToast()
 const router = useRouter()

@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useUserStore } from '@/stores/user'
+import { useUserService } from '@/services/user'
 import { useRouter } from 'vue-router'
 import type { User } from 'backend-sdk'
 import useCapitalizeFirstLetter from '@/helpers/capitalizeFirstLetter.helper'
@@ -37,7 +37,7 @@ import { useConfirm } from 'primevue/useconfirm'
 import { useLoadStore } from '@/stores/load'
 import { useToast } from 'primevue/usetoast'
 
-const userStore = useUserStore()
+const userStore = useUserService()
 const loadStore = useLoadStore()
 const toast = useToast()
 const router = useRouter()
