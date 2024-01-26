@@ -17,5 +17,8 @@ export default defineConfig({
         additionalData: '@import "./src/assets/colors.scss";'
       }
     }
+  },
+  optimizeDeps: {
+    include: ['backend-sdk']
   }
 })

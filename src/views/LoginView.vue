@@ -7,7 +7,7 @@
       </span>
     </div>
     <div id="right-view">
-      <img src="@/assets/Inbounds-all-blue.png" alt="Inbounds logo" />
+      <img id="logo" src="@/assets/Inbounds-all-blue.png" alt="Inbounds logo" />
       <h2 class="mb-6 has-text-weight-bold">Sign In</h2>
       <LoginForm />
     </div>
@@ -24,7 +24,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .login-view {
   display: flex;
   flex-direction: row;
@@ -67,15 +67,10 @@ export default {
   align-items: center;
   justify-content: center;
 
-  img {
+  #logo {
     width: 15em;
     margin-bottom: 4rem;
-    margin-left: -6rem;
+    margin-right: 18%;
   }
-}
-
-h1 {
-  color: white;
-  margin-bottom: 2rem;
 }
 </style>
