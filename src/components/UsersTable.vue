@@ -10,13 +10,13 @@
       <template #body="slotProps">
         <span class="is-flex is-justify-content-flex-start">
           <p-button
-            class="button is-info is-circle"
+            class="is-info is-circle"
             icon="pi pi-pencil"
             title="Edit User"
             @click="handleUpdate(slotProps.data)"
           />
           <p-button
-            class="button is-danger is-circle"
+            class="is-danger is-circle"
             icon="pi pi-trash"
             title="Delete User"
             @click="(e: Event) => handleDelete(e, slotProps.data)"

@@ -14,14 +14,12 @@
       <template v-slot:actions="slotProps">
         <span class="is-flex is-justify-content-flex-start">
           <p-button
-            class="button is-info is-circle"
-            icon="pi pi-pencil"
+            icon="pi pi-pencil rounded"
             title="Edit User"
             @click="handleUpdate(slotProps.data)"
           />
           <p-button
-            class="button is-danger is-circle"
-            icon="pi pi-trash"
+            icon="pi pi-trash rounded"
             title="Delete User"
             @click="(e: Event) => handleDelete(e, slotProps.data)"
           />
@@ -99,11 +97,13 @@ onMounted(async () => {
     role: user.role,
     createdAt: formatDateTime(user.createdAt)
   }))
+  console.log(users.value)
+  console.log('userColumns on mounted:', userColumns)
   loadStore.setLoading(false)
 })
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .users-view {
   display: flex;
   flex-direction: column;
@@ -111,6 +111,7 @@ onMounted(async () => {
   gap: 1rem;
   align-self: center;
   width: 100%;
+  min-width: 1200px;
 }
 
 .users-view h1 {
@@ -131,5 +132,14 @@ onMounted(async () => {
   width: 200px;
   align-self: flex-end;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.is-circle {
+  border-radius: 50% !important;
+  margin-right: 5px;
+  max-width: 35px;
+  max-height: 35px;
+  padding: 0;
+  aspect-ratio: 1/1;
 }
 </style>

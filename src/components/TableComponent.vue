@@ -1,29 +1,23 @@
 <template>
   <p-confirm-popup />
   <p-data-table :value="items" :paginator="true" :rows="10" :paginatorTemplate="paginatorTemplate">
-    <p-column
-      v-for="column in columns"
-      :key="column.field"
-      :field="column.field"
-      :header="column.header"
-    >
-      <template v-if="column.slotName" v-slot:[column.slotName]="slotProps">
-        <slot :name="column.slotName" v-bind="slotProps"></slot>
-      </template>
-    </p-column>
+    <template v-for="column in columns" :key="column.field">
+      <p-column :field="column.field" :header="column.header">
+        <template v-if="column.slotName" v-slot:[column.slotName]="slotProps">
+          <slot :name="column.slotName" v-bind="slotProps"></slot>
+        </template>
+      </p-column>
+    </template>
   </p-data-table>
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
-
 interface TableColumn {
   field: string
   header: string
   slotName?: string
 }
-
-const props = defineProps({
+defineProps({
   items: Array,
   columns: Array as () => TableColumn[],
   paginatorTemplate: String
