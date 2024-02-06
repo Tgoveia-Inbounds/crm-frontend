@@ -11,15 +11,17 @@
       />
     </div>
     <table-component :items="users" :columns="userColumns" :paginatorTemplate="paginatorTemplate">
-      <template v-slot:actions="slotProps">
+      <template #actions="slotProps">
         <span class="is-flex is-justify-content-flex-start">
           <p-button
-            icon="pi pi-pencil rounded"
+            class="button is-info is-circle"
+            icon="pi pi-pencil"
             title="Edit User"
             @click="handleUpdate(slotProps.data)"
           />
           <p-button
-            icon="pi pi-trash rounded"
+            class="button is-danger is-circle"
+            icon="pi pi-trash"
             title="Delete User"
             @click="(e: Event) => handleDelete(e, slotProps.data)"
           />
@@ -34,7 +36,6 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import TableComponent from '@/components/TableComponent.vue'
 import { useUserService } from '@/services/user'
-// import useCapitalizeFirstLetter from '@/helpers/capitalizeFirstLetter.helper'
 import { useConfirm } from 'primevue/useconfirm'
 import { useLoadStore } from '@/stores/load'
 import { useToast } from 'primevue/usetoast'
@@ -45,7 +46,6 @@ const userStore = useUserService()
 const loadStore = useLoadStore()
 const toast = useToast()
 const confirm = useConfirm()
-// const { capitalizeFirstLetter } = useCapitalizeFirstLetter()
 
 const users = ref<User[]>([])
 const paginatorTemplate =
@@ -57,7 +57,6 @@ const userColumns = [
   { field: 'email', header: 'Email' },
   { field: 'role', header: 'Role' },
   { field: 'createdAt', header: 'Created At' },
-  { field: 'actions', header: 'Actions', slotName: 'actions' }
 ]
 
 const formatDateTime = (date: string) =>
@@ -97,8 +96,6 @@ onMounted(async () => {
     role: user.role,
     createdAt: formatDateTime(user.createdAt)
   }))
-  console.log(users.value)
-  console.log('userColumns on mounted:', userColumns)
   loadStore.setLoading(false)
 })
 </script>

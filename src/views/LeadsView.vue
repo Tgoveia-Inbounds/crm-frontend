@@ -11,7 +11,6 @@
 import { ref, onMounted } from 'vue'
 import TableComponent from '@/components/TableComponent.vue'
 import type { CreateLeadDto } from 'backend-sdk'
-import { LeadStatus } from '@/constants/lead-status.enum'
 import { useLeadService } from '@/services/lead'
 import { useLoadStore } from '@/stores/load'
 

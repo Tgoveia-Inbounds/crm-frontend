@@ -2,12 +2,13 @@
   <p-confirm-popup />
   <p-data-table :value="items" :paginator="true" :rows="10" :paginatorTemplate="paginatorTemplate">
     <template v-for="column in columns" :key="column.field">
-      <p-column :field="column.field" :header="column.header">
-        <template v-if="column.slotName" v-slot:[column.slotName]="slotProps">
-          <slot :name="column.slotName" v-bind="slotProps"></slot>
-        </template>
-      </p-column>
+      <p-column :field="column.field" :header="column.header" />
     </template>
+    <p-column field="actions" header="Actions">
+      <template #body="slotProps">
+        <slot name="actions" v-bind="slotProps"></slot>
+      </template>
+    </p-column>
   </p-data-table>
 </template>
 
