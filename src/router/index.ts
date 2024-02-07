@@ -3,6 +3,7 @@ import LoginViewVue from '../views/LoginView.vue'
 import DashboardViewVue from '@/views/DashboardView.vue'
 import { useAuthStore } from '@/stores/auth'
 import { useLoadStore } from '@/stores/load'
+import { PermissionsValueEnum } from 'backend-sdk'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,17 +21,20 @@ const router = createRouter({
     {
       path: '/users',
       name: 'users',
-      component: () => import('@/views/UsersView.vue')
+      component: () => import('@/views/UsersView.vue'),
+      meta: { permission: PermissionsValueEnum.ManageUsers }
     },
     {
       path: '/users/create',
       name: 'create-user',
-      component: () => import('@/views/CreateUserView.vue')
+      component: () => import('@/views/CreateUserView.vue'),
+      meta: { permission: PermissionsValueEnum.ManageUsers }
     },
     {
       path: '/users/update/:id',
       name: 'update-user',
-      component: () => import('@/views/UpdateUsersView.vue')
+      component: () => import('@/views/UpdateUsersView.vue'),
+      meta: { permission: PermissionsValueEnum.ManageUsers }
     },
     {
       path: '/campaigns',
@@ -67,7 +71,11 @@ router.beforeEach((to, from, next) => {
   if (to.name !== 'login' && auth.isSessionVerified && !auth.isAuthenticated) {
     next({ name: 'login' })
   } else {
-    next()
+    const requiredPermission = to.meta?.permission as PermissionsValueEnum
+    if (!requiredPermission) next()
+    else if (requiredPermission && !auth.hasPermission(requiredPermission))
+      next({ name: 'dashboard' })
+    else next()
   }
 })
 

@@ -22,7 +22,12 @@
         <span v-if="!isCollapsed">Dashboard</span>
       </p-button>
 
-      <p-button :class="buttonClass('users')" @click="setActiveButton('users')" title="View Users">
+      <p-button
+        v-if="auth.permissions[PermissionsValueEnum.ManageUsers]"
+        :class="buttonClass('users')"
+        @click="setActiveButton('users')"
+        title="View Users"
+      >
         <span class="icon"> <i class="pi pi-user"></i> </span>
         <span v-if="!isCollapsed">Users</span>
       </p-button>
@@ -67,6 +72,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useConfirm } from 'primevue/useconfirm'
+import { PermissionsValueEnum } from 'backend-sdk'
 
 const isCollapsed = ref(false)
 const sidebarClass = computed(() => (isCollapsed.value ? 'closed' : 'open'))
@@ -75,18 +81,7 @@ const router = useRouter()
 const auth = useAuthStore()
 const confirm = useConfirm()
 
-const toggleSidebar = () => {
-  isCollapsed.value = !isCollapsed.value
-}
-
-const setActiveButton = (buttonName: string) => {
-  activeButton.value = buttonName
-  // redirect to page
-  router.push({
-    name: buttonName.toLowerCase()
-  })
-}
-
+// ----- LOGOUT -----
 const handleLogout = async (event: Event) => {
   if (!(event?.currentTarget instanceof HTMLElement)) return
   confirm.require({
@@ -100,6 +95,19 @@ const handleLogout = async (event: Event) => {
   })
 }
 
+// ----- MENU -----
+const toggleSidebar = () => {
+  isCollapsed.value = !isCollapsed.value
+}
+
+const setActiveButton = (buttonName: string) => {
+  activeButton.value = buttonName
+  router.push({
+    name: buttonName.toLowerCase()
+  })
+}
+
+// Reactive classes for menu buttons
 const buttonClass = (buttonName: string) => ({
   button: true,
   'is-white': true,

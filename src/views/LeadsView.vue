@@ -10,13 +10,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import TableComponent from '@/components/TableComponent.vue'
-import type { CreateLeadDto } from 'backend-sdk'
+import type { Lead } from 'backend-sdk'
 import { useLeadService } from '@/services/lead'
 import { useLoadStore } from '@/stores/load'
 
 const leadStore = useLeadService()
 const loadStore = useLoadStore()
-const leads = ref<CreateLeadDto[]>([])
+const leads = ref<Lead[]>([])
 const paginatorTemplate =
   'CurrentPageReport PrevPageLink PageLinks NextPageLink RowsPerPageDropdown'
 

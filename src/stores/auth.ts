@@ -1,20 +1,22 @@
 import { defineStore } from 'pinia'
-import { AuthenticationApiFactory } from 'backend-sdk'
-import { ref } from 'vue'
+import { AuthenticationApiFactory, PermissionsValueEnum, type User } from 'backend-sdk'
+import { ref, type Ref, computed } from 'vue'
 import { AxiosInstance } from '@/helpers/axios'
 
 const auth = AuthenticationApiFactory(undefined, import.meta.env.VITE_BE_BASE_URL, AxiosInstance)
 
 export const useAuthStore = defineStore('auth', () => {
+  const user: Ref<User | null> = ref(null)
   const isAuthenticated = ref(false)
   const isSessionVerified = ref(false)
 
   async function login(email: string, password: string) {
     try {
-      await auth.login({
+      const { data } = await auth.login({
         email,
         password
       })
+      user.value = data.user
       isAuthenticated.value = true
       isSessionVerified.value = true
       return true
@@ -35,7 +37,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function verifySession() {
     try {
-      await auth.verifySession()
+      const { data } = await auth.verifySession()
+      user.value = data.user
       isAuthenticated.value = true
       isSessionVerified.value = true
       return true
@@ -44,5 +47,22 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  return { isSessionVerified, isAuthenticated, login, logout, verifySession }
+  function hasPermission(permission: PermissionsValueEnum) {
+    return !!user.value?.permissions.value[permission]
+  }
+
+  const permissions = computed(() => ({
+    [PermissionsValueEnum.ManageUsers]: hasPermission(PermissionsValueEnum.ManageUsers)
+  }))
+
+  return {
+    hasPermission,
+    isSessionVerified,
+    isAuthenticated,
+    login,
+    logout,
+    verifySession,
+    user,
+    permissions
+  }
 })
