@@ -53,10 +53,6 @@ export const useAuthStore = defineStore('auth', () => {
     return !!user.value?.permissions.value[permission]
   }
 
-  // const permissions = computed(() => ({
-  //   [PermissionsValueEnum.ManageUsers]: hasPermission(PermissionsValueEnum.ManageUsers)
-  // }))
-
   const permissions = computed(() => {
     const keys = Object.keys(PermissionsValueEnum)
     const permissions: Record<PermissionsValueEnum, boolean> = {}
