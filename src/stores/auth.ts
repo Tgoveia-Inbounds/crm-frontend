@@ -29,6 +29,8 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       await auth.logout()
       isAuthenticated.value = false
+      isSessionVerified.value = false
+      user.value = null
       return true
     } catch {
       return false
@@ -51,9 +53,18 @@ export const useAuthStore = defineStore('auth', () => {
     return !!user.value?.permissions.value[permission]
   }
 
-  const permissions = computed(() => ({
-    [PermissionsValueEnum.ManageUsers]: hasPermission(PermissionsValueEnum.ManageUsers)
-  }))
+  // const permissions = computed(() => ({
+  //   [PermissionsValueEnum.ManageUsers]: hasPermission(PermissionsValueEnum.ManageUsers)
+  // }))
+
+  const permissions = computed(() => {
+    const keys = Object.keys(PermissionsValueEnum)
+    const permissions: Record<PermissionsValueEnum, boolean> = {}
+    for (const key of keys) {
+      permissions[PermissionsValueEnum[key]] = hasPermission(PermissionsValueEnum[key])
+    }
+    return permissions
+  })
 
   return {
     hasPermission,
